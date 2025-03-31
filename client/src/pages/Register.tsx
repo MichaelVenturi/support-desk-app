@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../redux/store";
-import { register } from "../redux/features/auth/authSlice";
+import { register, reset } from "../redux/features/auth/authSlice";
 import { IRootState } from "../types/stateTypes";
 
 interface IFormData {
@@ -26,6 +27,21 @@ const Register = () => {
   const dispatch = useAppDispatch();
   const { user, isError, isLoading, isSuccess, message } = useSelector((state: IRootState) => state.auth);
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(message);
+    }
+    if (isSuccess && user) {
+      navigate("/");
+    }
+
+    dispatch(reset());
+
+    return () => {};
+  }, [isError, isSuccess, user, message, navigate, dispatch]);
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prevState) => ({
       ...prevState,
@@ -45,6 +61,9 @@ const Register = () => {
       dispatch(register(userData));
     }
   };
+  if (isLoading) {
+    return <h1>loading</h1>;
+  }
   return (
     <>
       <section className="heading">
