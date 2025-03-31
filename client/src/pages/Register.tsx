@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../redux/store";
+import { register } from "../redux/features/auth/authSlice";
+import { IRootState } from "../types/stateTypes";
 
 interface IFormData {
   name: string;
@@ -19,6 +23,9 @@ const Register = () => {
 
   const { name, email, password, password2 } = formData;
 
+  const dispatch = useAppDispatch();
+  const { user, isError, isLoading, isSuccess, message } = useSelector((state: IRootState) => state.auth);
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prevState) => ({
       ...prevState,
@@ -29,6 +36,13 @@ const Register = () => {
     e.preventDefault();
     if (password !== password2) {
       toast.error("Passwords do not match");
+    } else {
+      const userData = {
+        name,
+        email,
+        password,
+      };
+      dispatch(register(userData));
     }
   };
   return (

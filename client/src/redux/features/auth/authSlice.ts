@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { IAuthState } from "../../../types/authState";
+import { IAuthState } from "../../../types/stateTypes";
 
 const initialState: IAuthState = {
   user: null,
@@ -8,6 +8,14 @@ const initialState: IAuthState = {
   isLoading: false,
   message: "",
 };
+
+export const register = createAsyncThunk("auth/register", async (user: any, thunkAPI) => {
+  console.log(user);
+});
+
+export const login = createAsyncThunk("auth/login", async (user: any, thunkAPI) => {
+  console.log(user);
+});
 
 export const authSlice = createSlice({
   name: "auth",

@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { FaSignInAlt } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../redux/store";
+import { login } from "../redux/features/auth/authSlice";
+import { IRootState } from "../types/stateTypes";
 
 interface IFormData {
   email: string;
@@ -15,6 +19,9 @@ const Login = () => {
 
   const { email, password } = formData;
 
+  const dispatch = useAppDispatch();
+  const { user, isError, isLoading, isSuccess, message } = useSelector((state: IRootState) => state.auth);
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prevState) => ({
       ...prevState,
@@ -23,6 +30,11 @@ const Login = () => {
   };
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const userData = {
+      email,
+      password,
+    };
+    dispatch(login(userData));
   };
   return (
     <>
