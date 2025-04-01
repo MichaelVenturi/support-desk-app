@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, isAnyOf } from "@reduxjs/toolkit";
 import { IAuthState } from "../../../types/stateTypes";
 import authService from "./authService";
 import { isAxiosError } from "axios";
@@ -16,24 +16,38 @@ const initialState: IAuthState = {
   message: "",
 };
 
+const errorHandler = (err: unknown) => {
+  let message = "unknown error";
+  if (isAxiosError(err)) {
+    message = err.response?.data?.message || err.message;
+  } else if (err instanceof Error) {
+    message = err.message;
+  } else if (typeof err === "string") {
+    err.toString();
+  }
+  return message;
+};
+
 export const register = createAsyncThunk("auth/register", async (user: INewUserPayload, thunkAPI) => {
   try {
     return await authService.register(user);
   } catch (err) {
-    let message = "unknown error";
-    if (isAxiosError(err)) {
-      message = err.response?.data?.message || err.message;
-    } else if (err instanceof Error) {
-      message = err.message;
-    } else if (typeof err === "string") {
-      err.toString();
-    }
+    const message = errorHandler(err);
     return thunkAPI.rejectWithValue(message);
   }
 });
 
 export const login = createAsyncThunk("auth/login", async (user: IUserPayload, thunkAPI) => {
-  console.log(user);
+  try {
+    return await authService.login(user);
+  } catch (err) {
+    const message = errorHandler(err);
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+export const logout = createAsyncThunk("auth/logout", async () => {
+  await authService.logout();
 });
 
 export const authSlice = createSlice({
@@ -50,15 +64,20 @@ export const authSlice = createSlice({
   // these change state due to actions outside of this slice, like from another slice or asyncthunk actions (here)
   extraReducers: (builder) => {
     builder
-      .addCase(register.pending, (state) => {
+      // async logout cases
+      .addCase(logout.fulfilled, (state) => {
+        state.user = null;
+      })
+      // register/logout cases
+      .addMatcher(isAnyOf(register.pending, login.pending), (state) => {
         state.isLoading = true;
       })
-      .addCase(register.fulfilled, (state, action) => {
+      .addMatcher(isAnyOf(register.fulfilled, login.fulfilled), (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.user = action.payload;
       })
-      .addCase(register.rejected, (state, action) => {
+      .addMatcher(isAnyOf(register.rejected, login.rejected), (state, action) => {
         state.isLoading = false;
         state.user = null;
         state.isError = true;

@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaSignInAlt } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../redux/store";
-import { login } from "../redux/features/auth/authSlice";
+import { login, reset } from "../redux/features/auth/authSlice";
+import Spinner from "../components/Spinner";
 import { IRootState } from "../types/stateTypes";
 
 interface IFormData {
@@ -22,6 +24,18 @@ const Login = () => {
   const dispatch = useAppDispatch();
   const { user, isError, isLoading, isSuccess, message } = useSelector((state: IRootState) => state.auth);
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(message);
+    }
+    if (isSuccess && user) {
+      navigate("/");
+    }
+    dispatch(reset());
+  }, [isError, isSuccess, message, user, dispatch, navigate]);
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prevState) => ({
       ...prevState,
@@ -36,6 +50,11 @@ const Login = () => {
     };
     dispatch(login(userData));
   };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
   return (
     <>
       <section className="heading">

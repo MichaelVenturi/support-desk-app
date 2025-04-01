@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../redux/store";
 import { register, reset } from "../redux/features/auth/authSlice";
+import Spinner from "../components/Spinner";
 import { IRootState } from "../types/stateTypes";
 
 interface IFormData {
@@ -36,10 +37,7 @@ const Register = () => {
     if (isSuccess && user) {
       navigate("/");
     }
-
     dispatch(reset());
-
-    return () => {};
   }, [isError, isSuccess, user, message, navigate, dispatch]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,7 +60,7 @@ const Register = () => {
     }
   };
   if (isLoading) {
-    return <h1>loading</h1>;
+    return <Spinner />;
   }
   return (
     <>
