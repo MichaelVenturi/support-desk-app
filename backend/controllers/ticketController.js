@@ -2,7 +2,9 @@ import asyncHandler from "express-async-handler";
 import User from "../models/userModel.js";
 import Ticket from "../models/ticketModel.js";
 
-//  get user tickets
+// @desc get all tickets
+// @route GET api/tickets
+// @access  private
 export const getTickets = asyncHandler(async (req, res) => {
   // get user using id in JWT
   const user = await User.findById(req.user.id);
@@ -16,7 +18,9 @@ export const getTickets = asyncHandler(async (req, res) => {
   res.status(200).json(tickets);
 });
 
-// create new ticket
+// @desc create new ticket
+// @route POST api/tickets
+// @access  private
 export const createTicket = asyncHandler(async (req, res) => {
   // get ticket info
   const { product, description } = req.body;

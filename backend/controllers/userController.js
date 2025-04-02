@@ -1,9 +1,11 @@
 import asyncHandler from "express-async-handler";
 import bcrypt from "bcryptjs";
-import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
+import User from "../models/userModel.js";
 
-// register a new user
+// @desc create a new user
+// @route POST api/users
+// @access  public
 export const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -27,7 +29,7 @@ export const registerUser = asyncHandler(async (req, res) => {
     email,
     password: hashedPassword,
   });
-
+  // return user
   if (user) {
     res.status(201).json({
       _id: user._id,
@@ -36,12 +38,15 @@ export const registerUser = asyncHandler(async (req, res) => {
       token: generateToken(user._id),
     });
   } else {
+    // else throw error
     res.status(400);
     throw new Error("Invalid user data");
   }
 });
 
-// login an existing user
+// @desc login an existing user
+// @route POST api/users/login
+// @access  public
 export const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -60,8 +65,9 @@ export const loginUser = asyncHandler(async (req, res) => {
   }
 });
 
-// get current user
-// @access private
+// @desc get current user info
+// @route GET api/users/me
+// @access  private
 export const getMe = asyncHandler(async (req, res) => {
   const user = {
     id: req.user._id,

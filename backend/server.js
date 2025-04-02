@@ -1,16 +1,16 @@
 import express from "express";
-import colors from "colors";
+import colors from "colors"; // used elsewhere
 import cors from "cors";
 import { config } from "dotenv";
-import userRoutes from "./routes/userRoutes.js";
-import ticketRoutes from "./routes/ticketRoutes.js";
 import { errorHandler } from "./middleware/errorMiddleware.js";
 import connectDB from "./config/db.js";
-import { connect } from "mongoose";
+// routes
+import userRoutes from "./routes/userRoutes.js";
+import ticketRoutes from "./routes/ticketRoutes.js";
 
 // config dotenv
 config();
-
+// connect db
 connectDB();
 
 const PORT = process.env.PORT || 5000;
@@ -23,6 +23,7 @@ app.use(express.urlencoded({ extended: false }));
 app.get("/", (req, res) => {
   res.status(201).json({ message: "Welcome" });
 });
+
 app.use("/api/users", userRoutes);
 app.use("/api/tickets", ticketRoutes);
 
