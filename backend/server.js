@@ -3,6 +3,7 @@ import colors from "colors";
 import cors from "cors";
 import { config } from "dotenv";
 import userRoutes from "./routes/userRoutes.js";
+import ticketRoutes from "./routes/ticketRoutes.js";
 import { errorHandler } from "./middleware/errorMiddleware.js";
 import connectDB from "./config/db.js";
 import { connect } from "mongoose";
@@ -23,6 +24,7 @@ app.get("/", (req, res) => {
   res.status(201).json({ message: "Welcome" });
 });
 app.use("/api/users", userRoutes);
+app.use("/api/tickets", ticketRoutes);
 
 app.use(errorHandler);
 
