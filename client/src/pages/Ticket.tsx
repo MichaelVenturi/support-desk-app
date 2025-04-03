@@ -27,8 +27,10 @@ const Ticket = () => {
     if (isError) {
       toast.error(message);
     }
-    dispatch(getTicket(ticketId!));
-  }, [isError, message, ticketId, dispatch]);
+    if (!ticket || ticket._id !== ticketId) {
+      dispatch(getTicket(ticketId!));
+    }
+  }, [isError, message, ticketId, dispatch, ticket]);
 
   if (isLoading) {
     return <Spinner />;
