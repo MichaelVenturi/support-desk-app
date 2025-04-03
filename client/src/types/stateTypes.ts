@@ -15,6 +15,7 @@ export interface IUser {
   id: string;
   email: string;
   name: string;
+  token: string | null;
 }
 
 export interface IAuthState extends IStateStatus {
