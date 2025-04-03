@@ -12,13 +12,10 @@ const Tickets = () => {
 
   const dispatch = useAppDispatch();
 
-  // unmount useEffect: reset ticketState status if fetching was a success
   useEffect(() => {
-    return () => {
-      if (isSuccess) {
-        dispatch(reset());
-      }
-    };
+    if (isSuccess) {
+      dispatch(reset());
+    }
   }, [dispatch, isSuccess]);
 
   useEffect(() => {
