@@ -70,7 +70,7 @@ export const loginUser = asyncHandler(async (req, res) => {
 // @access  private
 export const getMe = asyncHandler(async (req, res) => {
   const user = {
-    id: req.user._id,
+    _id: req.user._id,
     email: req.user.email,
     name: req.user.name,
   };

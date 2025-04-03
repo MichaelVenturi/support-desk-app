@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk, isAnyOf } from "@reduxjs/toolkit";
-import { IRootState, ITicketState } from "../../../types/stateTypes";
 import ticketService from "./ticketService";
+// types
+import { IRootState, ITicket, ITicketState } from "../../../types/stateTypes";
+import { ITicketPayload } from "../../../types/apiTypes";
 import { isAxiosError } from "axios";
 
 const initialState: ITicketState = {
@@ -11,11 +13,6 @@ const initialState: ITicketState = {
   isLoading: false,
   message: "",
 };
-
-interface ITicketData {
-  product: string;
-  description: string;
-}
 
 const errorHandler = (err: unknown) => {
   let message = "unknown error";
@@ -29,17 +26,20 @@ const errorHandler = (err: unknown) => {
   return message;
 };
 
-export const getTickets = createAsyncThunk<any, void, { state: IRootState }>("ticket/getAll", async (_, thunkAPI) => {
-  try {
-    const token = thunkAPI.getState().auth.user?.token ?? "";
-    return await ticketService.getTickets(token);
-  } catch (err) {
-    const message = errorHandler(err);
-    return thunkAPI.rejectWithValue(message);
+export const getTickets = createAsyncThunk<ITicket[], void, { state: IRootState }>(
+  "ticket/getAll",
+  async (_, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user?.token ?? "";
+      return await ticketService.getTickets(token);
+    } catch (err) {
+      const message = errorHandler(err);
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
-export const createTicket = createAsyncThunk<any, ITicketData, { state: IRootState }>(
+export const createTicket = createAsyncThunk<ITicket, ITicketPayload, { state: IRootState }>(
   "ticket/create",
   async (ticketData, thunkAPI) => {
     try {

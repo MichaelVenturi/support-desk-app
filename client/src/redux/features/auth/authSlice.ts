@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk, isAnyOf } from "@reduxjs/toolkit";
-import { IAuthState } from "../../../types/stateTypes";
 import authService from "./authService";
-import { isAxiosError } from "axios";
+// types
+import { IAuthState, IUser } from "../../../types/stateTypes";
 import { INewUserPayload, IUserPayload } from "../../../types/apiTypes";
+import { isAxiosError } from "axios";
 
 // get user from localstorage
 const localUser = localStorage.getItem("user");
@@ -28,7 +29,7 @@ const errorHandler = (err: unknown) => {
   return message;
 };
 
-export const register = createAsyncThunk("auth/register", async (user: INewUserPayload, thunkAPI) => {
+export const register = createAsyncThunk<IUser, INewUserPayload>("auth/register", async (user, thunkAPI) => {
   try {
     return await authService.register(user);
   } catch (err) {
@@ -37,7 +38,7 @@ export const register = createAsyncThunk("auth/register", async (user: INewUserP
   }
 });
 
-export const login = createAsyncThunk("auth/login", async (user: IUserPayload, thunkAPI) => {
+export const login = createAsyncThunk<IUser, IUserPayload>("auth/login", async (user: IUserPayload, thunkAPI) => {
   try {
     return await authService.login(user);
   } catch (err) {

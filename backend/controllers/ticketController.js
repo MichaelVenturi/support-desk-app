@@ -13,7 +13,7 @@ export const getTickets = asyncHandler(async (req, res) => {
     throw new Error("User not found");
   }
   // get tickets
-  const tickets = await Ticket.find({ user: req.user.id });
+  const tickets = await Ticket.find({ user: req.user.id }).select("-__v");
   res.status(200).json(tickets);
 });
 
@@ -28,7 +28,7 @@ export const getTicketById = asyncHandler(async (req, res) => {
     throw new Error("User not found");
   }
   // get ticket
-  const ticket = await Ticket.findById(req.params.id);
+  const ticket = await Ticket.findById(req.params.id).select("-__v");
   if (!ticket) {
     res.status(404);
     throw new Error("Ticket not found");
@@ -58,12 +58,14 @@ export const createTicket = asyncHandler(async (req, res) => {
     throw new Error("User not found");
   }
 
-  const ticket = await Ticket.create({
+  let ticket = await Ticket.create({
     product,
     description,
     user: req.user.id,
     status: "new",
   });
+  ticket = ticket.toObject();
+  delete ticket.__v;
 
   res.status(201).json(ticket);
 });
@@ -114,6 +116,6 @@ export const updateTicket = asyncHandler(async (req, res) => {
     res.status(401);
     throw new Error("Not authorized");
   }
-  const updatedTicket = await Ticket.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  const updatedTicket = await Ticket.findByIdAndUpdate(req.params.id, req.body, { new: true }).select("-__v");
   res.status(200).json(updatedTicket);
 });

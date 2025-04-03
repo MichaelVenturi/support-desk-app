@@ -1,11 +1,7 @@
 import axios from "axios";
+import { ITicketPayload } from "../../../types/apiTypes";
 
 const API_URL = "/api/tickets";
-
-interface ITicketData {
-  product: string;
-  description: string;
-}
 
 const getTickets = async (token: string) => {
   const config = {
@@ -18,7 +14,7 @@ const getTickets = async (token: string) => {
   return response.data;
 };
 
-const createTicket = async (ticketData: ITicketData, token: string) => {
+const createTicket = async (ticketData: ITicketPayload, token: string) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,

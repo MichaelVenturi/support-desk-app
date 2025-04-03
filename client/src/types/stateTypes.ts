@@ -24,7 +24,7 @@ export interface IAuthState extends IStateStatus {
 
 type TicketProduct = "iPhone" | "iPad" | "Macbook Pro";
 
-type TicketStatus = "new" | "closed";
+type TicketStatus = "new" | "open" | "closed";
 
 export interface ITicket {
   _id: string;
