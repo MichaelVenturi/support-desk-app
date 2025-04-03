@@ -12,7 +12,7 @@ interface IStateStatus {
 }
 
 export interface IUser {
-  id: string;
+  _id: string;
   email: string;
   name: string;
   token: string | null;
@@ -22,10 +22,17 @@ export interface IAuthState extends IStateStatus {
   user: IUser | null;
 }
 
+type TicketProduct = "iPhone" | "iPad" | "Macbook Pro";
+
+type TicketStatus = "new" | "closed";
+
 export interface ITicket {
-  product: string;
+  _id: string;
+  product: TicketProduct;
   description: string;
-  status: string;
+  status: TicketStatus;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ITicketState extends IStateStatus {
