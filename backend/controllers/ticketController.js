@@ -81,7 +81,7 @@ export const deleteTicket = asyncHandler(async (req, res) => {
     throw new Error("User not found");
   }
   // get ticket
-  const ticket = await Ticket.findById(req.params.id);
+  const ticket = await Ticket.findById(req.params.id).select("-__v");
   if (!ticket) {
     res.status(404);
     throw new Error("Ticket not found");
@@ -92,7 +92,7 @@ export const deleteTicket = asyncHandler(async (req, res) => {
     throw new Error("Not authorized");
   }
   await Ticket.deleteOne({ _id: req.params.id });
-  res.status(200).json({ success: true });
+  res.status(200).json({ success: true, deletedTicket: ticket });
 });
 
 // @desc update a ticket

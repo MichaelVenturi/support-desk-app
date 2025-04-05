@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
 import { useAppDispatch as useDispatch, useAppSelector as useSelector } from "../redux/store";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { getTicket, reset as ticketReset, closeTicket, setTicket } from "../redux/features/tickets/ticketSlice";
+import {
+  getTicket,
+  reset as ticketReset,
+  closeTicket,
+  setTicket,
+  deleteTicket,
+} from "../redux/features/tickets/ticketSlice";
 import { getNotes, reset as noteReset, createNote } from "../redux/features/notes/noteSlice";
 import { toast } from "react-toastify";
 import Modal, { Styles } from "react-modal";
@@ -31,6 +37,7 @@ type TicketParams = {
 
 const Ticket = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
   const [noteText, setNoteText] = useState("");
 
   const t = useSelector((state) => state.ticket);
@@ -82,6 +89,18 @@ const Ticket = () => {
   };
   const closeModal = () => {
     setModalIsOpen(false);
+    setDeleteModal(false);
+  };
+
+  const openDeleteWarning = () => {
+    setDeleteModal(true);
+    openModal();
+  };
+
+  const onDeleteTicket = () => {
+    dispatch(deleteTicket(ticketId!));
+    toast.success("Ticket deleted");
+    navigate("/tickets");
   };
 
   const onNoteSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -103,7 +122,13 @@ const Ticket = () => {
       <>
         <div className="ticket-page">
           <header className="ticket-header">
-            <BackButton url={"/tickets"} />
+            <div className="header">
+              <BackButton url={"/tickets"} />
+              <button className="btn btn-danger" onClick={openDeleteWarning}>
+                Delete ticket
+              </button>
+            </div>
+
             <h2>
               Ticket ID: {ticket._id}
               <span className={`status status-${ticket.status}`}>{ticket.status}</span>
@@ -124,29 +149,50 @@ const Ticket = () => {
             </button>
           )}
 
-          <Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={customStyles} contentLabel="Add Note">
-            <h2>Add Note</h2>
-            <button className="btn-close" onClick={closeModal}>
-              X
-            </button>
-            <form onSubmit={onNoteSubmit}>
-              <div className="form-group">
-                <textarea
-                  name="noteText"
-                  id="noteText"
-                  className="form-control"
-                  placeholder="Note text"
-                  value={noteText}
-                  onChange={(e) => setNoteText(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <button type="submit" className="btn">
-                  Submit
+          <Modal
+            isOpen={modalIsOpen}
+            onRequestClose={closeModal}
+            style={customStyles}
+            contentLabel={deleteModal ? "Delete Ticket" : "Add Note"}>
+            {deleteModal ? (
+              <>
+                <h2>Delete Ticket</h2>
+                <p>Are you sure you want to delete this ticket?</p>
+                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                  <button className="btn btn-reverse" onClick={onDeleteTicket}>
+                    Delete
+                  </button>
+                  <button className="btn" onClick={closeModal}>
+                    Cancel
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <h2>Add Note</h2>
+                <button className="btn-close" onClick={closeModal}>
+                  X
                 </button>
-              </div>
-            </form>
+                <form onSubmit={onNoteSubmit}>
+                  <div className="form-group">
+                    <textarea
+                      name="noteText"
+                      id="noteText"
+                      className="form-control"
+                      placeholder="Note text"
+                      value={noteText}
+                      onChange={(e) => setNoteText(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <button type="submit" className="btn">
+                      Submit
+                    </button>
+                  </div>
+                </form>
+              </>
+            )}
           </Modal>
 
           {n.isLoading ? <Spinner /> : notes.map((note) => <NoteItem key={note._id} note={note} />)}

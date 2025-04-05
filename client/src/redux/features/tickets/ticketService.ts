@@ -36,6 +36,17 @@ const createTicket = async (ticketData: ITicketPayload, token: string) => {
   return response.data;
 };
 
+const deleteTicket = async (ticketId: string, token: string) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.delete(`${API_URL}/${ticketId}`, config);
+
+  return response.data;
+};
+
 const closeTicket = async (ticketId: string, token: string) => {
   const config = {
     headers: {
@@ -57,6 +68,7 @@ const ticketService = {
   getTickets,
   getTicket,
   createTicket,
+  deleteTicket,
   closeTicket,
 };
 export default ticketService;
