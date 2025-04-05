@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaUser } from "react-icons/fa";
-import { toast } from "react-toastify";
 import { useAppDispatch as useDispatch, useAppSelector as useSelector } from "../redux/store";
 import { register, reset } from "../redux/features/auth/authSlice";
+import { FaUser } from "react-icons/fa";
+import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
 
 interface IFormData {

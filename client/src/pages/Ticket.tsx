@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
+// redux imports
 import { useAppDispatch as useDispatch, useAppSelector as useSelector } from "../redux/store";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   getTicket,
   reset as ticketReset,
@@ -9,9 +9,11 @@ import {
   deleteTicket,
 } from "../redux/features/tickets/ticketSlice";
 import { getNotes, reset as noteReset, createNote } from "../redux/features/notes/noteSlice";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import Modal, { Styles } from "react-modal";
 import { FaPlus } from "react-icons/fa";
+// components
 import BackButton from "../components/BackButton";
 import Spinner from "../components/Spinner";
 import NoteItem from "../components/NoteItem";
@@ -49,7 +51,9 @@ const Ticket = () => {
   const { ticketId } = useParams<TicketParams>();
   const navigate = useNavigate();
   const localTicket = useLocation().state?.ticket;
+
   const ticket = localTicket ?? t.ticket;
+
   useEffect(() => {
     if (t.isSuccess) {
       dispatch(ticketReset());

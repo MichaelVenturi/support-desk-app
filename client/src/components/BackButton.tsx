@@ -1,5 +1,5 @@
-import { FaArrowAltCircleLeft } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { FaArrowAltCircleLeft } from "react-icons/fa";
 
 const BackButton: React.FC<{ url: string }> = ({ url }) => {
   return (

@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useAppDispatch as useDispatch, useAppSelector as useSelector } from "../redux/store";
+import { createTicket, reset } from "../redux/features/tickets/ticketSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { createTicket, reset } from "../redux/features/tickets/ticketSlice";
 import Spinner from "../components/Spinner";
 import BackButton from "../components/BackButton";
 

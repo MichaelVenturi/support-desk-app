@@ -123,12 +123,10 @@ export const ticketSlice = createSlice({
         state.isSuccess = true;
         state.tickets = state.tickets.filter((ticket) => ticket._id !== action.payload.deletedTicket._id);
         state.ticket = null;
-        state.hasChanged = true;
       })
       .addCase(closeTicket.fulfilled, (state, action) => {
         state.isLoading = false;
         state.tickets.map((ticket) => (ticket._id === action.payload._id ? (ticket.status = "closed") : ticket));
-        state.hasChanged = true;
       })
       .addMatcher(
         isAnyOf(createTicket.pending, getTickets.pending, getTicket.pending, deleteTicket.pending),

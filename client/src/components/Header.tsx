@@ -1,7 +1,7 @@
-import { FaSignInAlt, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch as useDispatch, useAppSelector as useSelector } from "../redux/store";
 import { logout, reset } from "../redux/features/auth/authSlice";
+import { FaSignInAlt, FaSignOutAlt, FaUser } from "react-icons/fa";
 
 const Header = () => {
   const navigate = useNavigate();
