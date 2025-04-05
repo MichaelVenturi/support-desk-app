@@ -3,7 +3,7 @@ import authService from "./authService";
 // types
 import { IAuthState, IUser } from "../../../types/stateTypes";
 import { INewUserPayload, IUserPayload } from "../../../types/apiTypes";
-import { isAxiosError } from "axios";
+import { errorHandler } from "../../store";
 
 // get user from localstorage
 const localUser = localStorage.getItem("user");
@@ -15,18 +15,6 @@ const initialState: IAuthState = {
   isSuccess: false,
   isLoading: false,
   message: "",
-};
-
-const errorHandler = (err: unknown) => {
-  let message = "unknown error";
-  if (isAxiosError(err)) {
-    message = err.response?.data?.message || err.message;
-  } else if (err instanceof Error) {
-    message = err.message;
-  } else if (typeof err === "string") {
-    err.toString();
-  }
-  return message;
 };
 
 export const register = createAsyncThunk<IUser, INewUserPayload>("auth/register", async (user, thunkAPI) => {

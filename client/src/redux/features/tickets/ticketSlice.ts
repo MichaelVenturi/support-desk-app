@@ -3,7 +3,7 @@ import ticketService from "./ticketService";
 // types
 import { IRootState, ITicket, ITicketState } from "../../../types/stateTypes";
 import { ITicketPayload } from "../../../types/apiTypes";
-import { isAxiosError } from "axios";
+import { errorHandler } from "../../store";
 
 const initialState: ITicketState = {
   tickets: [],
@@ -12,18 +12,6 @@ const initialState: ITicketState = {
   isSuccess: false,
   isLoading: false,
   message: "",
-};
-
-const errorHandler = (err: unknown) => {
-  let message = "unknown error";
-  if (isAxiosError(err)) {
-    message = err.response?.data?.message || err.message;
-  } else if (err instanceof Error) {
-    message = err.message;
-  } else if (typeof err === "string") {
-    err.toString();
-  }
-  return message;
 };
 
 // get all tickets

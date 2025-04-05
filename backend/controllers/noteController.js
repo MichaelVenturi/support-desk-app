@@ -24,7 +24,7 @@ export const getNotes = asyncHandler(async (req, res) => {
     res.status(401);
     throw new Error("User not authorized");
   }
-  const notes = await Note.find({ ticket: req.params.ticketId });
+  const notes = await Note.find({ ticket: req.params.ticketId }).select("-__v");
   res.status(200).json(notes);
 });
 

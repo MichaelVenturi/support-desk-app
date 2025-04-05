@@ -11,6 +11,12 @@ interface IStateStatus {
   message: string;
 }
 
+interface IMongooseObject {
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface IUser {
   _id: string;
   email: string;
@@ -26,16 +32,25 @@ type TicketProduct = "iPhone" | "iPad" | "Macbook Pro";
 
 type TicketStatus = "new" | "open" | "closed";
 
-export interface ITicket {
-  _id: string;
+export interface ITicket extends IMongooseObject {
   product: TicketProduct;
+  user: string;
   description: string;
   status: TicketStatus;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface ITicketState extends IStateStatus {
   tickets: ITicket[];
   ticket: ITicket | null;
+}
+
+export interface INote extends IMongooseObject {
+  user: string;
+  ticket: string;
+  text: string;
+  isStaff: boolean;
+}
+
+export interface INoteState extends IStateStatus {
+  notes: INote[];
 }
