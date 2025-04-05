@@ -54,4 +54,5 @@ export interface INote extends IMongooseObject {
 
 export interface INoteState extends IStateStatus {
   notes: INote[];
+  ticketId: string;
 }

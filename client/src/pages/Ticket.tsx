@@ -64,7 +64,11 @@ const Ticket = () => {
     if (!localTicket || localTicket._id !== ticketId) {
       dispatch(getTicket(ticketId!));
     }
-    dispatch(getNotes(ticketId!));
+    // dont fetch notes again if the same notes are already in state
+    if (!notes || n.ticketId !== ticketId) {
+      dispatch(getNotes(ticketId!));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [t.isError, n.isError, t.message, ticketId, dispatch, localTicket]);
 
   const onTicketClose = () => {

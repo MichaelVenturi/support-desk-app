@@ -6,6 +6,7 @@ import { errorHandler } from "../../store";
 
 const initialState: INoteState = {
   notes: [],
+  ticketId: "",
   isError: false,
   isLoading: false,
   isSuccess: false,
@@ -13,7 +14,7 @@ const initialState: INoteState = {
 };
 
 // get all notes for ticket
-export const getNotes = createAsyncThunk<INote[], string, { state: IRootState }>(
+export const getNotes = createAsyncThunk<{ data: INote[]; ticketId: string }, string, { state: IRootState }>(
   "note/getAll",
   async (ticketId, thunkAPI) => {
     try {
@@ -32,6 +33,7 @@ export const createNote = createAsyncThunk<INote, INewNotePayload, { state: IRoo
   async ({ noteText, ticketId }, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user?.token ?? "";
+
       return await noteService.createNote(noteText, ticketId, token);
     } catch (err) {
       const message = errorHandler(err);
@@ -50,13 +52,17 @@ export const noteSlice = createSlice({
       state.isSuccess = false;
       state.message = "";
     },
+    setTicketId: (state, action) => {
+      state.ticketId = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(getNotes.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.notes = action.payload;
+        state.notes = action.payload.data;
+        state.ticketId = action.payload.ticketId;
       })
       .addCase(createNote.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -70,9 +76,10 @@ export const noteSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;
+        state.ticketId = "";
       });
   },
 });
 
-export const { reset } = noteSlice.actions;
+export const { reset, setTicketId } = noteSlice.actions;
 export default noteSlice.reducer;
