@@ -80,6 +80,9 @@ export const ticketSlice = createSlice({
       state.isSuccess = false;
       state.message = "";
     },
+    setTicket: (state, action) => {
+      state.ticket = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -112,5 +115,5 @@ export const ticketSlice = createSlice({
   },
 });
 
-export const { reset } = ticketSlice.actions;
+export const { reset, setTicket } = ticketSlice.actions;
 export default ticketSlice.reducer;

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAppDispatch as useDispatch, useAppSelector as useSelector } from "../redux/store";
-import { useParams, useNavigate } from "react-router-dom";
-import { getTicket, reset as ticketReset, closeTicket } from "../redux/features/tickets/ticketSlice";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { getTicket, reset as ticketReset, closeTicket, setTicket } from "../redux/features/tickets/ticketSlice";
 import { getNotes, reset as noteReset, createNote } from "../redux/features/notes/noteSlice";
 import { toast } from "react-toastify";
 import Modal, { Styles } from "react-modal";
@@ -41,6 +41,7 @@ const Ticket = () => {
   const dispatch = useDispatch();
   const { ticketId } = useParams<TicketParams>();
   const navigate = useNavigate();
+  const localTicket = useLocation().state?.ticket;
 
   useEffect(() => {
     if (t.isSuccess) {
@@ -52,14 +53,21 @@ const Ticket = () => {
   }, [dispatch, t.isSuccess, n.isSuccess]);
 
   useEffect(() => {
-    if (t.isError) {
+    if (t.isError || n.isError) {
       toast.error(t.message);
     }
-    if (!ticket || ticket._id !== ticketId) {
-      dispatch(getTicket(ticketId!));
-      dispatch(getNotes(ticketId!));
+    if (localTicket) {
+      console.log("ticket was passed thru location");
+      dispatch(setTicket(localTicket));
     }
-  }, [t.isError, t.message, ticketId, dispatch, ticket]);
+
+    // only ping api to get the ticket if A: ticket was not passed thru props, B: the currently set ticket's id doesnt match the params
+    if (!localTicket || localTicket._id !== ticketId) {
+      console.log("getting ticket from api");
+      dispatch(getTicket(ticketId!));
+    }
+    dispatch(getNotes(ticketId!));
+  }, [t.isError, n.isError, t.message, ticketId, dispatch, localTicket]);
 
   const onTicketClose = () => {
     dispatch(closeTicket(ticketId!));
