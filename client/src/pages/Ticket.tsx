@@ -34,7 +34,7 @@ const Ticket = () => {
   const [noteText, setNoteText] = useState("");
 
   const t = useSelector((state) => state.ticket);
-  const { ticket } = t;
+
   const n = useSelector((state) => state.note);
   const { notes } = n;
 
@@ -42,7 +42,7 @@ const Ticket = () => {
   const { ticketId } = useParams<TicketParams>();
   const navigate = useNavigate();
   const localTicket = useLocation().state?.ticket;
-
+  const ticket = localTicket ?? t.ticket;
   useEffect(() => {
     if (t.isSuccess) {
       dispatch(ticketReset());
@@ -57,13 +57,11 @@ const Ticket = () => {
       toast.error(t.message);
     }
     if (localTicket) {
-      console.log("ticket was passed thru location");
       dispatch(setTicket(localTicket));
     }
 
     // only ping api to get the ticket if A: ticket was not passed thru props, B: the currently set ticket's id doesnt match the params
     if (!localTicket || localTicket._id !== ticketId) {
-      console.log("getting ticket from api");
       dispatch(getTicket(ticketId!));
     }
     dispatch(getNotes(ticketId!));
@@ -88,7 +86,7 @@ const Ticket = () => {
     closeModal();
   };
 
-  if (t.isLoading || n.isLoading) {
+  if (t.isLoading) {
     return <Spinner />;
   }
 
@@ -98,64 +96,64 @@ const Ticket = () => {
 
   return (
     ticket && (
-      <div className="ticket-page">
-        <header className="ticket-header">
-          <BackButton url={"/tickets"} />
-          <h2>
-            Ticket ID: {ticket._id}
-            <span className={`status status-${ticket.status}`}>{ticket.status}</span>
-          </h2>
-          <h3>Date Submitted: {new Date(ticket!.createdAt).toLocaleString("en-us")}</h3>
-          <h3>Product: {ticket.product}</h3>
-          <hr />
-          <div className="ticket-desc">
-            <h3>Desription of Issue</h3>
-            <p>{ticket.description}</p>
-          </div>
-          <h2>Notes</h2>
-        </header>
-
-        {ticket.status !== "closed" && (
-          <button onClick={openModal} className="btn">
-            <FaPlus /> Add Note
-          </button>
-        )}
-
-        <Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={customStyles} contentLabel="Add Note">
-          <h2>Add Note</h2>
-          <button className="btn-close" onClick={closeModal}>
-            X
-          </button>
-          <form onSubmit={onNoteSubmit}>
-            <div className="form-group">
-              <textarea
-                name="noteText"
-                id="noteText"
-                className="form-control"
-                placeholder="Note text"
-                value={noteText}
-                onChange={(e) => setNoteText(e.target.value)}
-                required
-              />
+      <>
+        <div className="ticket-page">
+          <header className="ticket-header">
+            <BackButton url={"/tickets"} />
+            <h2>
+              Ticket ID: {ticket._id}
+              <span className={`status status-${ticket.status}`}>{ticket.status}</span>
+            </h2>
+            <h3>Date Submitted: {new Date(ticket!.createdAt).toLocaleString("en-us")}</h3>
+            <h3>Product: {ticket.product}</h3>
+            <hr />
+            <div className="ticket-desc">
+              <h3>Desription of Issue</h3>
+              <p>{ticket.description}</p>
             </div>
-            <div className="form-group">
-              <button type="submit" className="btn">
-                Submit
-              </button>
-            </div>
-          </form>
-        </Modal>
+            <h2>Notes</h2>
+          </header>
 
-        {notes.map((note) => (
-          <NoteItem key={note._id} note={note} />
-        ))}
+          {ticket.status !== "closed" && (
+            <button onClick={openModal} className="btn">
+              <FaPlus /> Add Note
+            </button>
+          )}
 
-        {ticket.status !== "closed" && (
-          <button onClick={onTicketClose} className="btn btn-block btn-danger">
-            Close Ticket
-          </button>
-        )}
-      </div>
+          <Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={customStyles} contentLabel="Add Note">
+            <h2>Add Note</h2>
+            <button className="btn-close" onClick={closeModal}>
+              X
+            </button>
+            <form onSubmit={onNoteSubmit}>
+              <div className="form-group">
+                <textarea
+                  name="noteText"
+                  id="noteText"
+                  className="form-control"
+                  placeholder="Note text"
+                  value={noteText}
+                  onChange={(e) => setNoteText(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <button type="submit" className="btn">
+                  Submit
+                </button>
+              </div>
+            </form>
+          </Modal>
+
+          {n.isLoading ? <Spinner /> : notes.map((note) => <NoteItem key={note._id} note={note} />)}
+
+          {ticket.status !== "closed" && (
+            <button onClick={onTicketClose} className="btn btn-block btn-danger">
+              Close Ticket
+            </button>
+          )}
+        </div>
+      </>
     )
   );
 };

@@ -24,12 +24,9 @@ const Tickets = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
-  if (isLoading) {
-    return <Spinner />;
-  }
-
   return (
     <>
+      {isLoading && <Spinner />}
       <div className="header">
         <BackButton url="/" />
         <button onClick={() => dispatch(getTickets())} className="btn btn-back">
