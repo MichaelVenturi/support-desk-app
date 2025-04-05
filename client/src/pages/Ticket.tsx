@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useAppDispatch } from "../redux/store";
 import { useParams, useNavigate } from "react-router-dom";
 import { getTicket, reset as ticketReset, closeTicket } from "../redux/features/tickets/ticketSlice";
-import { getNotes, reset as noteReset } from "../redux/features/notes/noteSlice";
+import { getNotes, reset as noteReset, createNote } from "../redux/features/notes/noteSlice";
 import { toast } from "react-toastify";
 import Modal, { Styles } from "react-modal";
 import { FaPlus } from "react-icons/fa";
@@ -78,6 +78,7 @@ const Ticket = () => {
 
   const onNoteSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    dispatch(createNote({ noteText, ticketId: ticketId! }));
     closeModal();
   };
 

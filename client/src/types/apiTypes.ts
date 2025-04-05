@@ -13,3 +13,8 @@ export interface ITicketPayload {
   product: string;
   description: string;
 }
+
+export interface INewNotePayload {
+  noteText: string;
+  ticketId: string;
+}
