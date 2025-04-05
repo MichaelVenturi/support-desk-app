@@ -2,11 +2,9 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
-import { useAppDispatch } from "../redux/store";
+import { useAppDispatch as useDispatch, useAppSelector as useSelector } from "../redux/store";
 import { register, reset } from "../redux/features/auth/authSlice";
 import Spinner from "../components/Spinner";
-import { IRootState } from "../types/stateTypes";
 
 interface IFormData {
   name: string;
@@ -25,8 +23,8 @@ const Register = () => {
 
   const { name, email, password, password2 } = formData;
 
-  const dispatch = useAppDispatch();
-  const { user, isError, isLoading, isSuccess, message } = useSelector((state: IRootState) => state.auth);
+  const dispatch = useDispatch();
+  const { user, isError, isLoading, isSuccess, message } = useSelector((state) => state.auth);
 
   const navigate = useNavigate();
 

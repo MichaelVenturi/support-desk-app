@@ -2,8 +2,8 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./features/auth/authSlice";
 import ticketReducer from "./features/tickets/ticketSlice";
 import noteReducer from "./features/notes/noteSlice";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../types/stateTypes";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, IRootState } from "../types/stateTypes";
 import { isAxiosError } from "axios";
 
 const store = configureStore({
@@ -15,6 +15,8 @@ const store = configureStore({
 });
 
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
+
+export const useAppSelector = useSelector.withTypes<IRootState>();
 
 export const errorHandler = (err: unknown) => {
   let message = "unknown error";

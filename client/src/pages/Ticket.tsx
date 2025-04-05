@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { useAppDispatch } from "../redux/store";
+import { useAppDispatch as useDispatch, useAppSelector as useSelector } from "../redux/store";
 import { useParams, useNavigate } from "react-router-dom";
 import { getTicket, reset as ticketReset, closeTicket } from "../redux/features/tickets/ticketSlice";
 import { getNotes, reset as noteReset, createNote } from "../redux/features/notes/noteSlice";
@@ -9,7 +8,6 @@ import Modal, { Styles } from "react-modal";
 import { FaPlus } from "react-icons/fa";
 import BackButton from "../components/BackButton";
 import Spinner from "../components/Spinner";
-import { IRootState } from "../types/stateTypes";
 import NoteItem from "../components/NoteItem";
 
 const customStyles: Styles = {
@@ -35,12 +33,12 @@ const Ticket = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [noteText, setNoteText] = useState("");
 
-  const t = useSelector((state: IRootState) => state.ticket);
+  const t = useSelector((state) => state.ticket);
   const { ticket } = t;
-  const n = useSelector((state: IRootState) => state.note);
+  const n = useSelector((state) => state.note);
   const { notes } = n;
 
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const { ticketId } = useParams<TicketParams>();
   const navigate = useNavigate();
 

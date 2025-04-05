@@ -1,16 +1,14 @@
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { useAppDispatch } from "../redux/store";
+import { useAppDispatch as useDispatch, useAppSelector as useSelector } from "../redux/store";
 import { getTickets, reset } from "../redux/features/tickets/ticketSlice";
 import Spinner from "../components/Spinner";
 import BackButton from "../components/BackButton";
-import { IRootState } from "../types/stateTypes";
 import TicketItem from "../components/TicketItem";
 
 const Tickets = () => {
-  const { tickets, isLoading, isSuccess } = useSelector((state: IRootState) => state.ticket);
+  const { tickets, isLoading, isSuccess } = useSelector((state) => state.ticket);
 
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (isSuccess) {

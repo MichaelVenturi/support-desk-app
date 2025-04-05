@@ -1,13 +1,12 @@
-import { useSelector } from "react-redux";
-
-import { INote, IRootState } from "../types/stateTypes";
+import { useAppSelector as useSelector } from "../redux/store";
+import { INote } from "../types/stateTypes";
 
 interface INoteItemProps {
   note: INote;
 }
 
 const NoteItem: React.FC<INoteItemProps> = ({ note }) => {
-  const { user } = useSelector((state: IRootState) => state.auth);
+  const { user } = useSelector((state) => state.auth);
   return (
     <div
       className="note"

@@ -1,23 +1,21 @@
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { useAppDispatch } from "../redux/store";
+import { useAppDispatch as useDispatch, useAppSelector as useSelector } from "../redux/store";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { createTicket, reset } from "../redux/features/tickets/ticketSlice";
 import Spinner from "../components/Spinner";
 import BackButton from "../components/BackButton";
-import { IRootState } from "../types/stateTypes";
 
 const NewTicket = () => {
-  const { user } = useSelector((state: IRootState) => state.auth);
-  const { isLoading, isError, isSuccess, message } = useSelector((state: IRootState) => state.ticket);
+  const { user } = useSelector((state) => state.auth);
+  const { isLoading, isError, isSuccess, message } = useSelector((state) => state.ticket);
 
   const name = user!.name;
   const email = user!.email;
   const [product, setProduct] = useState("iPhone");
   const [description, setDescription] = useState("");
 
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
