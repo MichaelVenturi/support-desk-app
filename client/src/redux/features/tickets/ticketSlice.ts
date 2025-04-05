@@ -8,6 +8,7 @@ import { errorHandler } from "../../store";
 const initialState: ITicketState = {
   tickets: [],
   ticket: null,
+  hasChanged: false,
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -89,11 +90,13 @@ export const ticketSlice = createSlice({
       .addCase(createTicket.fulfilled, (state) => {
         state.isLoading = false;
         state.isSuccess = true;
+        state.hasChanged = true;
       })
       .addCase(getTickets.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.tickets = action.payload;
+        state.hasChanged = false;
       })
       .addCase(getTicket.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -103,6 +106,7 @@ export const ticketSlice = createSlice({
       .addCase(closeTicket.fulfilled, (state, action) => {
         state.isLoading = false;
         state.tickets.map((ticket) => (ticket._id === action.payload._id ? (ticket.status = "closed") : ticket));
+        state.hasChanged = true;
       })
       .addMatcher(isAnyOf(createTicket.pending, getTickets.pending, getTicket.pending), (state) => {
         state.isLoading = true;

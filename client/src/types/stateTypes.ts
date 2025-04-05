@@ -42,6 +42,7 @@ export interface ITicket extends IMongooseObject {
 export interface ITicketState extends IStateStatus {
   tickets: ITicket[];
   ticket: ITicket | null;
+  hasChanged: boolean;
 }
 
 export interface INote extends IMongooseObject {

@@ -6,7 +6,7 @@ import BackButton from "../components/BackButton";
 import TicketItem from "../components/TicketItem";
 
 const Tickets = () => {
-  const { tickets, isLoading, isSuccess } = useSelector((state) => state.ticket);
+  const { tickets, isLoading, isSuccess, hasChanged } = useSelector((state) => state.ticket);
 
   const dispatch = useDispatch();
 
@@ -17,7 +17,11 @@ const Tickets = () => {
   }, [dispatch, isSuccess]);
 
   useEffect(() => {
-    dispatch(getTickets());
+    // only fetch tickets if they havent been fetched, or if a change has occurred (ex: closing or adding a ticket)
+    if (tickets.length === 0 || hasChanged) {
+      dispatch(getTickets());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   if (isLoading) {
@@ -26,7 +30,13 @@ const Tickets = () => {
 
   return (
     <>
-      <BackButton url="/" />
+      <div className="header">
+        <BackButton url="/" />
+        <button onClick={() => dispatch(getTickets())} className="btn btn-back">
+          Refresh
+        </button>
+      </div>
+
       <h1>Tickets</h1>
       <div className="tickets">
         <div className="ticket-headings">
