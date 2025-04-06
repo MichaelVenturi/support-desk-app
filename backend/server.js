@@ -30,7 +30,9 @@ if (process.env.NODE_ENV === "production") {
   // set build folder as static
   app.use(express.static(path.join(import.meta.dirname, "../client/dist")));
 
-  app.get("*", (_req, res) => res.sendFile(import.meta.dirname, "../", "client", "dist", "index.html"));
+  app.get("*", (_req, res) => {
+    res.sendFile(path.join(import.meta.dirname, "../client/dist/index.html"));
+  });
 } else {
   app.get("/", (_req, res) => {
     res.status(201).json({ message: "Welcome to the support Desk API" });
